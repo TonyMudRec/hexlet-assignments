@@ -32,9 +32,12 @@ class App {
     }
 
     protected static <S, I> String toString(Map<S, I> sentence) {
-        StringBuilder sb = new StringBuilder("{\n");
-        for (Map.Entry<S, I> entry : sentence.entrySet()) {
-            sb.append(String.format("  %s: %1d\n", entry.getKey(), entry.getValue()));
+        StringBuilder sb = new StringBuilder("{");
+        if (!sentence.isEmpty()) {
+            sb.append("\n");
+            for (Map.Entry<S, I> entry : sentence.entrySet()) {
+                sb.append(String.format("  %s: %1d\n", entry.getKey(), entry.getValue()));
+            }
         }
         sb.append("}");
         return sb.toString();
