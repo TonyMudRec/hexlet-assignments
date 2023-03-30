@@ -42,19 +42,20 @@ class App {
 //     {title=The Tempest, year=1611, author=Shakespeare}
 // ]
     }
-    public static<M extends Map<? extends String, ? extends String>> List<M> findWhere(List<M> books, Map<String, String> where) {
+ public static <M extends Map<? extends String, ? extends String>> List<M> findWhere(List<M> books, Map<String, String> where) {
+        boolean bookMustBeAdded;
         List<M> result = new ArrayList<>();
         for (M book : books) {
-            Map<String, String> currentBook = new HashMap<>(Map.copyOf(book));
-            for (String key : currentBook.keySet()) {
-                if (where.containsValue(currentBook.get(key))) {
-                    result.add(book);
+            bookMustBeAdded = true;
+            for (String key : where.keySet()) {
+                if (!book.containsValue(where.get(key))) {
+                    bookMustBeAdded = false;
                     break;
                 }
             }
+            if (bookMustBeAdded) result.add(book);
         }
         return result;
     }
 }
 //END
-
