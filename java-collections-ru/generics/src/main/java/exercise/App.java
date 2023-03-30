@@ -43,9 +43,8 @@ class App {
 // ]
     }
 
-
-public static List<Map> findWhere(List<Map> books, Map<String, String> where) {
-        List<Map> result = new ArrayList<>();
+    public static List<Map<String, String>> findWhere(List<Map> books, Map<String, String> where) {
+        List<Map<String, String>> result = new ArrayList<>();
         for (Map book : books) {
             for (Object keys : book.keySet()) {
                 if (where.containsValue(book.get(keys))) {
