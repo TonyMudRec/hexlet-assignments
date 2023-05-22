@@ -21,7 +21,7 @@ public class Cottage implements Home {
 
     @Override
     public double getArea() {
-        return 0;
+        return area;
     }
 }
 // END
