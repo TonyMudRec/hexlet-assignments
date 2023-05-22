@@ -9,6 +9,7 @@ public class App {
         return homes.stream()
                 .sorted(new HomeComparator())
                 .map(Object::toString)
+                .limit(n)
                 .toList();
     }
 }
