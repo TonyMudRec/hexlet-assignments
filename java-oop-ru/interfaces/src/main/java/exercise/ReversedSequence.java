@@ -4,7 +4,7 @@ package exercise;
 class ReversedSequence implements CharSequence {
     String text;
 
-    public ReversedSequence(String text) {
+    ReversedSequence(String text) {
         StringBuilder sb = new StringBuilder(text);
         this.text = sb.reverse().toString();
     }

@@ -20,7 +20,8 @@ class AppTest {
         List<String> expected = new ArrayList<>(List.of(
             "Квартира площадью 44.0 метров на 10 этаже",
             "Квартира площадью 90.0 метров на 2 этаже",
-            "2 этажный коттедж площадью 125.5 метров"
+            "2 этажный коттедж площадью 125.5 метров",
+                "3 этажный коттедж площадью 150.0 метров"
         ));
 
         List<String> result = App.buildApartmentsList(apartments, 3);
@@ -55,8 +56,4 @@ class AppTest {
         List<String> result = App.buildApartmentsList(apartments, 10);
         assertThat(result).isEqualTo(expected);
     }
-
-    // BEGIN
-    
-    // END
 }
