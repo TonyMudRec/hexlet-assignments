@@ -24,7 +24,7 @@ class AppTest {
     private static String baseUrl;
 
     @BeforeAll
-    public static void setup() throws LifecycleException, IOException {
+    public static void setup() throws LifecycleException {
         app = App.getApp(0);
         app.start();
         port = app.getConnector().getLocalPort();

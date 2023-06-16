@@ -5,7 +5,9 @@ import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.Context;
 
+import javax.servlet.ServletException;
 import java.io.File;
+import java.util.Arrays;
 
 public class App {
 
@@ -26,10 +28,10 @@ public class App {
         Context ctx = app.addContext("", new File(".").getAbsolutePath());
 
         // BEGIN
-        app.addServlet(ctx, "WelcomeServlet", new WelcomeServlet());
-        ctx.addServletMappingDecoded("/", "WelcomeServlet");
-        app.start();
-        app.getServer().await();
+            app.addServlet(ctx, "WelcomeServlet", new WelcomeServlet());
+            ctx.addServletMappingDecoded("", WelcomeServlet.class.getSimpleName());
+            app.start();
+            app.getServer().await();
         // END
 
         return app;
