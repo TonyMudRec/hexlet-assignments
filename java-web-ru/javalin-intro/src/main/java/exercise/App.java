@@ -11,7 +11,10 @@ public final class App {
     public static Javalin getApp() {
 
         // BEGIN
-        return Javalin.create()
+        return Javalin.create(config -> {
+                    // Включаем логгирование при разработке
+                    config.plugins.enableDevLogging();
+                })
                 .get("/welcome", ctx -> ctx.result("Welcome to Hexlet!"));
         // END
     }
