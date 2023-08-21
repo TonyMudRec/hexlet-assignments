@@ -1,9 +1,9 @@
 package exercise;
 
 // BEGIN
+
 import io.javalin.Javalin;
 // END
-
 
 
 public final class App {
@@ -12,9 +12,8 @@ public final class App {
 
         // BEGIN
         return Javalin.create(config -> {
-                    // Включаем логгирование при разработке
-                    config.plugins.enableDevLogging();
-                })
+            config.plugins.enableDevLogging();
+        })
                 .get("/welcome", ctx -> ctx.result("Welcome to Hexlet!"));
         // END
     }
