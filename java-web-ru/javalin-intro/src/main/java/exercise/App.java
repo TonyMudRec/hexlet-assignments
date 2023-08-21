@@ -5,15 +5,14 @@ package exercise;
 import io.javalin.Javalin;
 // END
 
-
 public final class App {
 
     public static Javalin getApp() {
 
         // BEGIN
         return Javalin.create(config -> {
-            config.plugins.enableDevLogging();
-        })
+                    config.plugins.enableDevLogging();
+                })
                 .get("/welcome", ctx -> ctx.result("Welcome to Hexlet!"));
         // END
     }
