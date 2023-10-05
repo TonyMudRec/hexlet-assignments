@@ -25,7 +25,7 @@ public class ProductsController {
     @ResponseStatus(HttpStatus.OK)
     public List<Product> index(@RequestParam(value="min", defaultValue="1") int min,
                                @RequestParam(value="max", defaultValue="1000") int max) {
-        return productRepository.findByPriceBetween(min, max);
+        return productRepository.findByPriceBetweenOrderByPrice(min, max);
     }
     // END
 
