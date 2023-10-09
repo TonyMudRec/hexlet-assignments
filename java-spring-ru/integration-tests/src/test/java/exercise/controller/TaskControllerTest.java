@@ -34,80 +34,117 @@ import exercise.model.Task;
 public class TaskControllerTest {
 
     @Autowired
-    private MockMvc mvc;
+    private MockMvc mockMvc;
 
     @Autowired
     private Faker faker;
 
     @Autowired
-    private TaskRepository taskRepository;
+    private ObjectMapper om;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private TaskRepository taskRepository;
 
-    private Task testTask;
 
-    @BeforeEach
-    public void createTask() throws Exception {
-        var title = faker.lorem().word();
-        var task = Instancio.of(Task.class)
-                .ignore(Select.field(Task::getUpdatedAt))
-                .ignore(Select.field(Task::getCreatedAt))
-                .ignore(Select.field(Task::getId))
-                .supply(Select.field(Task::getTitle), () -> title)
-                .supply(Select.field(Task::getDescription), () -> faker.lorem().paragraph())
-                .create();
+    @Test
+    public void testWelcomePage() throws Exception {
+        var result = mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andReturn();
 
-        var request = post("/tasks")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(task));
-
-        mvc.perform(request).andExpect(status().isCreated());
-        testTask = taskRepository.findByTitle(title).get();
+        var body = result.getResponse().getContentAsString();
+        assertThat(body).contains("Welcome to Spring!");
     }
 
-    @AfterEach
-    public void deleteTask() throws Exception {
-        taskRepository.deleteById(1L);
+    @Test
+    public void testIndex() throws Exception {
+        var result = mockMvc.perform(get("/tasks"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var body = result.getResponse().getContentAsString();
+        assertThatJson(body).isArray();
+    }
+
+
+    private Task generateTask() {
+        return Instancio.of(Task.class)
+                .ignore(Select.field(Task::getId))
+                .supply(Select.field(Task::getTitle), () -> faker.lorem().word())
+                .supply(Select.field(Task::getDescription), () -> faker.lorem().paragraph())
+                .create();
+    }
+
+    // BEGIN
+    @Test
+    public void testShow() throws Exception {
+
+        var task = generateTask();
+        taskRepository.save(task);
+
+        var request = get("/tasks/{id}", task.getId());
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+        var body = result.getResponse().getContentAsString();
+
+        assertThatJson(body).and(
+                v -> v.node("title").isEqualTo(task.getTitle()),
+                v -> v.node("description").isEqualTo(task.getDescription())
+        );
     }
 
     @Test
     public void testCreate() throws Exception {
-        var createdTask = taskRepository.findByTitle(testTask.getTitle());
-        assertThat(createdTask).isNotEmpty();
-    }
+        var data = generateTask();
 
-    @Test
-    public void testShow() throws Exception {
-        var response = mvc.perform(get("/tasks/" + testTask.getId()))
-                .andExpect(status().isOk())
-                .andReturn();
+        var request = post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(data));
 
-        assertThat(response.getResponse().getStatus()).isEqualTo(200);
+        mockMvc.perform(request)
+                .andExpect(status().isCreated());
+
+        var task = taskRepository.findByTitle(data.getTitle()).get();
+
+        assertThat(task).isNotNull();
+        assertThat(task.getTitle()).isEqualTo(data.getTitle());
+        assertThat(task.getDescription()).isEqualTo(data.getDescription());
     }
 
     @Test
     public void testUpdate() throws Exception {
+        var task = generateTask();
+        taskRepository.save(task);
+
         var data = new HashMap<>();
-        data.put("title", "testTitle");
+        data.put("title", "new title");
 
-        var request = put("/tasks/" + testTask.getId())
+        var request = put("/tasks/{id}", task.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(data));
+                .content(om.writeValueAsString(data));
 
-        mvc.perform(request).andExpect(status().isOk());
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
 
-        var task = taskRepository.findByTitle("testTitle");
-        assertThat(task).isNotEmpty();
+        task = taskRepository.findById(task.getId()).get();
+
+        assertThat(task.getTitle()).isEqualTo(data.get("title"));
     }
 
     @Test
     public void testDelete() throws Exception {
-        var request = delete("/tasks/" + testTask.getId());
 
-        mvc.perform(request).andExpect(status().isOk());
-        var task = taskRepository.findById(testTask.getId());
-        assertThat(task).isEmpty();
+        var task = generateTask();
+        taskRepository.save(task);
+
+        var request = delete("/tasks/{id}", task.getId());
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+
+        task = taskRepository.findById(task.getId()).orElse(null);
+        assertThat(task).isNull();
     }
 }
 // END
