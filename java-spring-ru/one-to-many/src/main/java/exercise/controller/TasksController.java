@@ -53,24 +53,27 @@ public class TasksController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public TaskDTO create(@RequestBody TaskCreateDTO taskCreateDTO) {
-//        var id = taskCreateDTO.getAssigneeId();
-//        var user = uRepo.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException(String.format("User with id %d not exist", id)));
+        var id = taskCreateDTO.getAssigneeId();
+        var user = uRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("User with id %d not exist", id)));
         var task = mapper.map(taskCreateDTO);
-//        task.setAssignee(user);
+        user.addTask(task);
+        task.setAssignee(user);
         tRepo.save(task);
-        var taskDTO = mapper.map(task);
-//        taskDTO.setAssigneeId(id);
-        return taskDTO;
+        return mapper.map(task);
     }
 
     @PutMapping("/{id}")
     public TaskDTO update(@PathVariable Long id, @RequestBody TaskUpdateDTO updateDTO) {
         var task = tRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Task with id %d not exist", id)));
+                .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+        var user =  uRepo.findById(updateDTO.getAssigneeId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         mapper.update(updateDTO, task);
+        task.setAssignee(user);
         tRepo.save(task);
-        return mapper.map(task);
+        var postDTO = mapper.map(task);
+        return postDTO;
     }
 
     @DeleteMapping("")

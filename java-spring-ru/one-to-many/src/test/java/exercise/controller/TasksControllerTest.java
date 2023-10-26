@@ -90,7 +90,7 @@ class TasksControllerTest {
 
         assertThatJson(body).and(
                 v -> v.node("title").isEqualTo(testTask.getTitle()),
-//                v -> v.node("description").isEqualTo(testTask.getDescription()),
+                v -> v.node("description").isEqualTo(testTask.getDescription()),
                 v -> v.node("assigneeId").isEqualTo(testTask.getAssignee().getId())
         );
     }
@@ -111,7 +111,7 @@ class TasksControllerTest {
         assertThat(task).isNotNull();
         assertThat(task.getTitle()).isEqualTo(testTask.getTitle());
         assertThat(task.getDescription()).isEqualTo(testTask.getDescription());
-//        assertThat(task.getAssignee().getId()).isEqualTo(testTask.getAssignee().getId());
+        assertThat(task.getAssignee().getId()).isEqualTo(testTask.getAssignee().getId());
     }
 
     @Test
@@ -135,7 +135,7 @@ class TasksControllerTest {
 
         assertThat(task.getTitle()).isEqualTo(dto.getTitle());
         assertThat(task.getDescription()).isEqualTo(dto.getDescription());
-//        assertThat(task.getAssignee().getId()).isEqualTo(dto.getAssigneeId());
+        assertThat(task.getAssignee().getId()).isEqualTo(dto.getAssigneeId());
     }
 
     public void testDestroy() throws Exception {
