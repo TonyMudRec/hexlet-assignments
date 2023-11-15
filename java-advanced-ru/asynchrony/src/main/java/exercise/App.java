@@ -3,6 +3,8 @@ package exercise;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 class App {
@@ -42,11 +44,28 @@ class App {
         });
     }
 
+    public static CompletableFuture<Long> getDirectorySize(String dir) {
+        return CompletableFuture.supplyAsync(() -> {
+            Path path = Path.of(dir).toAbsolutePath().normalize();
+            long sum = 0L;
+            try {
+                var list = Files.list(path).filter(Files::isRegularFile).toList();
+                for (Path path1 : list) {
+                    sum += Files.size(path1);
+                }
+            } catch (IOException ioException) {
+                throw new RuntimeException(ioException);
+            }
+            return sum;
+        });
+    }
+
     // END
 
     public static void main(String[] args) throws Exception {
         // BEGIN
         CompletableFuture<String> result = App.unionFiles("file1.txt", "file2.txt", "dest.txt");
+        result.get();
         // END
     }
 }
