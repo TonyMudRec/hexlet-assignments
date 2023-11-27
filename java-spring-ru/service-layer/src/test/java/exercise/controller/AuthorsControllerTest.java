@@ -54,33 +54,33 @@ class AuthorsControllerTest {
         testAuthor = Instancio.of(modelGenerator.getAuthorModel()).create();
     }
 
-//    @Test
-//    public void testIndex() throws Exception {
-//        authorRepository.save(testAuthor);
-//        var result = mockMvc.perform(get("/authors"))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//
-//        var body = result.getResponse().getContentAsString();
-//        assertThatJson(body).isArray();
-//    }
-//
-//    @Test
-//    public void testShow() throws Exception {
-//
-//        authorRepository.save(testAuthor);
-//
-//        var request = get("/authors/{id}", testAuthor.getId());
-//        var result = mockMvc.perform(request)
-//                .andExpect(status().isOk())
-//                .andReturn();
-//        var body = result.getResponse().getContentAsString();
-//
-//        assertThatJson(body).and(
-//                v -> v.node("firstName").isEqualTo(testAuthor.getFirstName()),
-//                v -> v.node("lastName").isEqualTo(testAuthor.getLastName())
-//        );
-//    }
+    @Test
+    public void testIndex() throws Exception {
+        authorRepository.save(testAuthor);
+        var result = mockMvc.perform(get("/authors"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var body = result.getResponse().getContentAsString();
+        assertThatJson(body).isArray();
+    }
+
+    @Test
+    public void testShow() throws Exception {
+
+        authorRepository.save(testAuthor);
+
+        var request = get("/authors/{id}", testAuthor.getId());
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+        var body = result.getResponse().getContentAsString();
+
+        assertThatJson(body).and(
+                v -> v.node("firstName").isEqualTo(testAuthor.getFirstName()),
+                v -> v.node("lastName").isEqualTo(testAuthor.getLastName())
+        );
+    }
 
     @Test
     public void testCreate() throws Exception {
@@ -156,13 +156,13 @@ class AuthorsControllerTest {
         assertThat(author.getFirstName()).isEqualTo(dto.get("firstName"));
     }
 
-//    @Test
-//    public void testDestroy() throws Exception {
-//        authorRepository.save(testAuthor);
-//        var request = delete("/books/{id}", testAuthor.getId());
-//        mockMvc.perform(request)
-//                .andExpect(status().isOk());
-//
-//        assertThat(authorRepository.existsById(testAuthor.getId())).isEqualTo(false);
-//    }
+
+    public void testDestroy() throws Exception {
+        authorRepository.save(testAuthor);
+        var request = delete("/books/{id}", testAuthor.getId());
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+
+        assertThat(authorRepository.existsById(testAuthor.getId())).isEqualTo(false);
+    }
 }

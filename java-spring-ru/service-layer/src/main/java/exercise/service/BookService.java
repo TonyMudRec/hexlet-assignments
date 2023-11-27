@@ -15,38 +15,40 @@ import java.util.List;
 public class BookService {
     // BEGIN
     @Autowired
-    private BookRepository repo;
+    private BookRepository bookRepository;
 
     @Autowired
-    private BookMapper mapper;
+    private BookMapper bookMapper;
 
-    public BookDTO findById(Long id) {
-        var book = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not Found"));
-        return mapper.map(book);
+    public BookDTO getBookById(Long id) {
+        var book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+        return bookMapper.map(book);
     }
 
-    public List<BookDTO> getAll() {
-        return repo.findAll().stream()
-                .map(mapper::map)
+    public List<BookDTO> getAllBooks() {
+        var books = bookRepository.findAll();
+
+        return books.stream()
+                .map(bookMapper::map)
                 .toList();
     }
 
-    public BookDTO create(BookCreateDTO dto) {
-        var book = mapper.map(dto);
-        repo.save(book);
-        return mapper.map(book);
+    public BookDTO createBook(BookCreateDTO dto) {
+        var book = bookMapper.map(dto);
+        bookRepository.save(book);
+        return bookMapper.map(book);
     }
 
-    public BookDTO update(BookUpdateDTO dto, Long id) {
-        var book = repo.findById(id)
+    public BookDTO updateBook(BookUpdateDTO dto, Long id) {
+        var book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
-        mapper.update(dto, book);
-        repo.save(book);
-        return mapper.map(book);
+        bookMapper.update(dto, book);
+        bookRepository.save(book);
+        return bookMapper.map(book);
     }
 
-    public void deleteById(Long id) {
-        repo.deleteById(id);
+    public void deleteBook(Long id) {
+        bookRepository.deleteById(id);
     }
     // END
 }

@@ -28,42 +28,33 @@ public class BooksController {
     private BookService bookService;
 
     // BEGIN
-    @GetMapping(path = "")
-    @ResponseStatus(HttpStatus.OK)
-    ResponseEntity<BookDTO> show(@PathVariable Long id) {
-        var bookDTO = bookService.findById(id);
-        return ResponseEntity.ok(bookDTO);
-    }
-
     @GetMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    ResponseEntity<List<BookDTO>> index() {
-        var books = bookService.getAll();
-        return ResponseEntity.ok()
-                .header("X-Total-Count", String.valueOf(books.size()))
-                .body(books);
+    BookDTO show(@PathVariable Long id) {
+        return bookService.getBookById(id);
+    }
+
+    @GetMapping(path = "")
+    List<BookDTO> index() {
+        return bookService.getAllBooks();
     }
 
     @PostMapping(path = "")
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<BookDTO> create(@Valid @RequestBody BookCreateDTO dto) {
-        var url = URI.create("/books");
-        var bookDTO = bookService.create(dto);
-        return ResponseEntity.created(url)
-                .body(bookDTO);
+    BookDTO create(@Valid @RequestBody BookCreateDTO dto) {
+        return bookService.createBook(dto);
     }
 
     @PutMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    ResponseEntity<BookDTO> update(@RequestBody @Valid BookUpdateDTO dto, @PathVariable Long id) {
-        var bookDTO = bookService.update(dto, id);
-        return ResponseEntity.ok(bookDTO);
+    BookDTO update(@RequestBody @Valid BookUpdateDTO dto, @PathVariable Long id) {
+        return bookService.updateBook(dto, id);
     }
 
     @DeleteMapping(path = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable Long id) {
-        bookService.deleteById(id);
+        bookService.deleteBook(id);
     }
     // END
 }

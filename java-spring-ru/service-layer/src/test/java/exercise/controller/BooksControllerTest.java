@@ -67,35 +67,35 @@ class BooksControllerTest {
         testBook.setAuthor(author);
     }
 
-//    @Test
-//    public void testIndex() throws Exception {
-//        bookRepository.save(testBook);
-//        var result = mockMvc.perform(get("/books"))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//
-//        var body = result.getResponse().getContentAsString();
-//        assertThatJson(body).isArray();
-//    }
+    @Test
+    public void testIndex() throws Exception {
+        bookRepository.save(testBook);
+        var result = mockMvc.perform(get("/books"))
+                .andExpect(status().isOk())
+                .andReturn();
 
-//    @Test
-//    public void testShow() throws Exception {
-//
-//        bookRepository.save(testBook);
-//
-//        var request = get("/books/{id}", testBook.getId());
-//        var result = mockMvc.perform(request)
-//                .andExpect(status().isOk())
-//                .andReturn();
-//        var body = result.getResponse().getContentAsString();
-//
-//        assertThatJson(body).and(
-//                v -> v.node("title").isEqualTo(testBook.getTitle()),
-//                v -> v.node("authorId").isEqualTo(testBook.getAuthor().getId()),
-//                v -> v.node("authorFirstName").isEqualTo(testBook.getAuthor().getFirstName()),
-//                v -> v.node("authorLastName").isEqualTo(testBook.getAuthor().getLastName())
-//        );
-//    }
+        var body = result.getResponse().getContentAsString();
+        assertThatJson(body).isArray();
+    }
+
+    @Test
+    public void testShow() throws Exception {
+
+        bookRepository.save(testBook);
+
+        var request = get("/books/{id}", testBook.getId());
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+        var body = result.getResponse().getContentAsString();
+
+        assertThatJson(body).and(
+                v -> v.node("title").isEqualTo(testBook.getTitle()),
+                v -> v.node("authorId").isEqualTo(testBook.getAuthor().getId()),
+                v -> v.node("authorFirstName").isEqualTo(testBook.getAuthor().getFirstName()),
+                v -> v.node("authorLastName").isEqualTo(testBook.getAuthor().getLastName())
+        );
+    }
 
     @Test
     public void testCreate() throws Exception {
@@ -169,7 +169,7 @@ class BooksControllerTest {
         assertThat(task.getTitle()).isEqualTo(testBook.getTitle());
         assertThat(task.getAuthor().getId()).isEqualTo(dto.get("authorId"));
     }
-
+    
     public void testDestroy() throws Exception {
         bookRepository.save(testBook);
         var request = delete("/books/{id}", testBook.getId());
